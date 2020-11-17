@@ -19,8 +19,9 @@ defmodule Soap.Wsdl do
 
   @spec parse_from_url(String.t()) :: {:ok, map()}
   def parse_from_url(path, opts \\ []) do
+    {http_headers, opts} = Keyword.pop(opts, :http_headers, [])
     request_opts = Keyword.merge([follow_redirect: true, max_redirect: 5], opts)
-    %HTTPoison.Response{body: wsdl} = HTTPoison.get!(path, [], request_opts)
+    %HTTPoison.Response{body: wsdl} = HTTPoison.get!(path, http_headers, request_opts)
     parse(wsdl, path, opts)
   end
 
